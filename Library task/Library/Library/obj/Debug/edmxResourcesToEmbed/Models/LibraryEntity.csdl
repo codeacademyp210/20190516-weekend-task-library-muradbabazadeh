@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MyLibraryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Author">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="AuthorsBooks" Relationship="Self.FK__AuthorsBo__Autho__4F7CD00D" FromRole="Authors" ToRole="AuthorsBooks" />
+  </EntityType>
+  <EntityType Name="AuthorsBook">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AuthorID" Type="Int32" Nullable="false" />
+    <Property Name="BookID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Author" Relationship="Self.FK__AuthorsBo__Autho__4F7CD00D" FromRole="AuthorsBooks" ToRole="Authors" />
+    <NavigationProperty Name="Book" Relationship="Self.FK__AuthorsBo__BookI__5070F446" FromRole="AuthorsBooks" ToRole="Books" />
+  </EntityType>
+  <EntityType Name="Book">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="CategorID" Type="Int32" Nullable="false" />
+    <Property Name="Count" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="AuthorsBooks" Relationship="Self.FK__AuthorsBo__BookI__5070F446" FromRole="Books" ToRole="AuthorsBooks" />
+    <NavigationProperty Name="Category" Relationship="Self.FK__Books__CategorID__403A8C7D" FromRole="Books" ToRole="Categories" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__BookID__4CA06362" FromRole="Books" ToRole="Orders" />
+  </EntityType>
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Books" Relationship="Self.FK__Books__CategorID__403A8C7D" FromRole="Categories" ToRole="Books" />
+  </EntityType>
+  <EntityType Name="Client">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Status" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__ClientID__4BAC3F29" FromRole="Clients" ToRole="Orders" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ClientID" Type="Int32" Nullable="false" />
+    <Property Name="BookID" Type="Int32" Nullable="false" />
+    <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ReturnDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Book" Relationship="Self.FK__Orders__BookID__4CA06362" FromRole="Orders" ToRole="Books" />
+    <NavigationProperty Name="Client" Relationship="Self.FK__Orders__ClientID__4BAC3F29" FromRole="Orders" ToRole="Clients" />
+  </EntityType>
+  <Association Name="FK__AuthorsBo__Autho__4F7CD00D">
+    <End Role="Authors" Type="Self.Author" Multiplicity="1" />
+    <End Role="AuthorsBooks" Type="Self.AuthorsBook" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Authors">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AuthorsBooks">
+        <PropertyRef Name="AuthorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__AuthorsBo__BookI__5070F446">
+    <End Role="Books" Type="Self.Book" Multiplicity="1" />
+    <End Role="AuthorsBooks" Type="Self.AuthorsBook" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Books">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AuthorsBooks">
+        <PropertyRef Name="BookID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Books__CategorID__403A8C7D">
+    <End Role="Categories" Type="Self.Category" Multiplicity="1" />
+    <End Role="Books" Type="Self.Book" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Categories">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Books">
+        <PropertyRef Name="CategorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Orders__BookID__4CA06362">
+    <End Role="Books" Type="Self.Book" Multiplicity="1" />
+    <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Books">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="BookID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Orders__ClientID__4BAC3F29">
+    <End Role="Clients" Type="Self.Client" Multiplicity="1" />
+    <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Clients">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="ClientID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="MyLibraryEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Authors" EntityType="Self.Author" />
+    <EntitySet Name="AuthorsBooks" EntityType="Self.AuthorsBook" />
+    <EntitySet Name="Books" EntityType="Self.Book" />
+    <EntitySet Name="Categories" EntityType="Self.Category" />
+    <EntitySet Name="Clients" EntityType="Self.Client" />
+    <EntitySet Name="Orders" EntityType="Self.Order" />
+    <AssociationSet Name="FK__AuthorsBo__Autho__4F7CD00D" Association="Self.FK__AuthorsBo__Autho__4F7CD00D">
+      <End Role="Authors" EntitySet="Authors" />
+      <End Role="AuthorsBooks" EntitySet="AuthorsBooks" />
+    </AssociationSet>
+    <AssociationSet Name="FK__AuthorsBo__BookI__5070F446" Association="Self.FK__AuthorsBo__BookI__5070F446">
+      <End Role="Books" EntitySet="Books" />
+      <End Role="AuthorsBooks" EntitySet="AuthorsBooks" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Books__CategorID__403A8C7D" Association="Self.FK__Books__CategorID__403A8C7D">
+      <End Role="Categories" EntitySet="Categories" />
+      <End Role="Books" EntitySet="Books" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Orders__BookID__4CA06362" Association="Self.FK__Orders__BookID__4CA06362">
+      <End Role="Books" EntitySet="Books" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Orders__ClientID__4BAC3F29" Association="Self.FK__Orders__ClientID__4BAC3F29">
+      <End Role="Clients" EntitySet="Clients" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
